@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#fbf8f2" />
+  <title>درسینو</title>
+  <link rel="icon" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #fbf8f2;
+      --ink: #1d3557;
+      --muted: #5c6b7a;
+      --rule: #e4ddcf;
+      --ok: #137a4d;
+      --bad: #c81d4a;
+      --rainbow: linear-gradient(90deg, #ff4d6d, #f3722c, #ffd60a, #06d6a0, #3a86ff, #8338ec, #ff006e);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
+
+    body {
+      font-family: "Vazirmatn", Tahoma, sans-serif;
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--ink);
+      background: var(--paper);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .stripe { height: 6px; background: var(--rainbow); }
+    main { width: min(960px, 90vw); margin: 0 auto; padding: 28px 0 56px; }
+
+    footer {
+      display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+      gap: 8px 18px; padding: 0 0 32px;
+      font-size: 14px; font-weight: 700; color: var(--muted);
+    }
+    .foot-btn {
+      font: inherit; font-size: 14px; font-weight: 700; color: var(--muted);
+      background: none; border: 0; padding: 4px 0; cursor: pointer;
+    }
+    .foot-btn:hover { color: var(--ink); text-decoration: underline; }
+
+    .logo-fallback {
+      display: inline-block; font-size: 36px; font-weight: 800; line-height: 1.4;
+      background: var(--rainbow); -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+
+    /* ---------- نوار بالا ---------- */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding-bottom: 18px; margin-bottom: 36px; border-bottom: 1px solid var(--rule);
+    }
+    .brand { background: none; border: 0; padding: 0; cursor: pointer; }
+    .brand-logo { display: block; width: auto; height: 56px; mix-blend-mode: multiply; }
+    .topbar-end { display: flex; align-items: center; gap: 16px; font-size: 14px; color: var(--muted); }
+    .text-btn {
+      font: inherit; font-size: 14px; font-weight: 700; color: var(--ink);
+      background: none; border: 0; padding: 4px 0; cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    .text-btn:hover { border-bottom-color: var(--ink); }
+
+    /* ---------- ورود ---------- */
+    .login { display: grid; gap: 48px; align-items: center; }
+    .hero { text-align: center; }
+    .hero .brand-logo { width: min(420px, 80vw); height: auto; margin: 0 auto; }
+    .hero .logo-fallback { font-size: clamp(64px, 12vw, 100px); }
+    .tagline { margin-top: 14px; font-size: 17px; font-weight: 500; color: var(--muted); }
+
+    .login-form { display: grid; gap: 22px; width: 100%; max-width: 400px; margin: 0 auto; }
+    .login-form h1 { font-size: 30px; font-weight: 800; line-height: 1.5; }
+    .login-form .lead { margin-top: -14px; font-size: 15px; color: var(--muted); }
+
+    .field { display: grid; gap: 6px; }
+    .field > span { font-size: 14px; font-weight: 700; color: var(--muted); }
+    .field input,
+    .field select {
+      font: inherit; font-size: 18px; color: var(--ink);
+      background: transparent; border: 0; border-bottom: 2px solid var(--rule);
+      border-radius: 0; padding: 8px 2px; outline: none;
+      transition: border-color .2s ease;
+    }
+    .field input::placeholder { color: #a3a9b5; }
+    .field input:focus,
+    .field select:focus { border-bottom-color: var(--ink); }
+    .field input[type="file"] { font-size: 15px; padding: 10px 0; border-bottom-style: dashed; }
+
+    .error { min-height: 24px; font-size: 14px; font-weight: 700; color: var(--bad); }
+    .notice { min-height: 24px; font-size: 14px; font-weight: 700; color: var(--ok); }
+    .btn-primary {
+      font: inherit; font-size: 17px; font-weight: 800; color: #fff;
+      background: var(--ink); border: 0; border-radius: 14px; padding: 16px;
+      cursor: pointer; transition: background .2s ease;
+    }
+    .btn-primary:hover { background: #3a86ff; }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+
+    @media (min-width: 840px) {
+      .login { grid-template-columns: 1.1fr 0.9fr; gap: 64px; }
+      .hero { text-align: right; }
+      .hero .brand-logo { width: 100%; margin: 0; }
+    }
+
+    /* ---------- عنوان صفحه‌ها ---------- */
+    .back {
+      font: inherit; font-size: 14px; font-weight: 700; color: var(--muted);
+      background: none; border: 0; padding: 0; margin-bottom: 14px; cursor: pointer;
+    }
+    .back:hover { color: var(--ink); text-decoration: underline; }
+    .view-head { margin-bottom: 28px; }
+    .view-head h1 { font-size: clamp(26px, 4vw, 36px); font-weight: 800; line-height: 1.5; }
+    .view-head p { font-size: 16px; color: var(--muted); }
+
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+
+    /* ---------- پایه‌ها: نوارهای رنگی ---------- */
+    .bands { display: grid; gap: 14px; }
+    .band {
+      display: flex; align-items: center; gap: 22px;
+      width: 100%; padding: 22px 28px; border: 0; border-radius: 22px;
+      background: var(--c); color: var(--ink); font: inherit; text-align: right; cursor: pointer;
+      animation: rise .5s ease backwards; animation-delay: calc(var(--i) * 90ms);
+      transition: transform .25s ease;
+    }
+    .band:hover { transform: translateX(-8px); }
+    .band:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+    .band-num { font-size: clamp(56px, 10vw, 88px); font-weight: 800; line-height: 1; }
+    .band-text { display: grid; gap: 2px; }
+    .band-title { font-size: clamp(20px, 3vw, 26px); font-weight: 800; }
+    .band-meta { font-size: 14px; font-weight: 500; opacity: 0.8; }
+
+    /* ---------- درس‌ها: جلد دفترچه ---------- */
+    .covers { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+    .cover {
+      display: grid; align-content: space-between; gap: 24px;
+      min-height: 176px; padding: 20px 30px 20px 22px;
+      background: var(--soft); color: var(--ink); font: inherit; text-align: right;
+      border: 0; border-radius: 18px 6px 6px 18px;
+      box-shadow: inset -14px 0 0 var(--c);
+      cursor: pointer;
+      animation: rise .5s ease backwards; animation-delay: calc(var(--i) * 80ms);
+      transition: transform .25s ease;
+    }
+    .cover:hover { transform: translateY(-4px); }
+    .cover:focus-visible { outline: 3px solid var(--c); outline-offset: 3px; }
+    .cover-icon { font-size: 36px; line-height: 1; }
+    .cover-text { display: grid; gap: 4px; }
+    .cover-title { font-size: 19px; font-weight: 800; line-height: 1.5; }
+    .cover-meta { font-size: 13px; font-weight: 500; color: var(--muted); }
+
+    /* ---------- فهرست آزمون‌ها (کاغذی) ---------- */
+    .rows { list-style: none; border-top: 2px solid var(--ink); }
+    .row {
+      display: flex; align-items: center; gap: 18px;
+      padding: 18px 4px; border-bottom: 1px dashed var(--rule);
+      animation: rise .5s ease backwards; animation-delay: calc(var(--i) * 70ms);
+    }
+    .row-num { min-width: 2ch; font-size: 28px; font-weight: 800; color: var(--c); }
+    .row-title { flex: 1; font-size: 17px; font-weight: 700; }
+    .open {
+      font-size: 14px; font-weight: 700; color: var(--ink); text-decoration: none;
+      border: 2px solid var(--ink); border-radius: 999px; padding: 6px 16px;
+      transition: background .2s ease, color .2s ease;
+    }
+    .open:hover { background: var(--ink); color: #fff; }
+    .soon { font-size: 14px; font-weight: 500; color: var(--muted); }
+    .empty {
+      list-style: none; padding: 48px 20px; text-align: center;
+      font-size: 16px; font-weight: 500; color: var(--muted);
+      border: 1.5px dashed #cfc6b4; border-radius: 18px;
+    }
+
+    /* ---------- پنل مدیریت ---------- */
+    .admin-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .admin-form {
+      display: grid; gap: 20px; max-width: 520px;
+      padding: 4px 0 36px; margin-bottom: 36px; border-bottom: 1px solid var(--rule);
+    }
+    .admin-form h2, .list-title { font-size: 20px; font-weight: 800; }
+    .list-title { margin-bottom: 4px; }
+    .admin-row { animation: none; }
+    .row-main { flex: 1; min-width: 0; display: grid; gap: 2px; }
+    .row-meta { font-size: 13px; font-weight: 500; color: var(--muted); }
+    .row-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .inline-input {
+      width: 100%; font: inherit; font-size: 16px; color: var(--ink);
+      background: transparent; border: 0; border-bottom: 2px solid var(--ink);
+      padding: 4px 2px; outline: none;
+    }
+    .mini {
+      font: inherit; font-size: 13px; font-weight: 700; color: var(--ink);
+      background: none; border: 1.5px solid var(--ink); border-radius: 999px;
+      padding: 4px 12px; cursor: pointer;
+    }
+    .mini:hover { background: var(--ink); color: #fff; }
+    .mini.danger { color: var(--bad); border-color: var(--bad); }
+    .mini.danger:hover { background: var(--bad); color: #fff; }
+
+    @media (max-width: 600px) {
+      .covers > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+      .hello { display: none; }
+      .brand-logo { height: 46px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stripe" aria-hidden="true"></div>
+
+  <main>
+    <header class="topbar" id="topbar" hidden>
+      <button class="brand" type="button" data-go="grades" aria-label="صفحه‌ی اصلی">
+        <img class="brand-logo" alt="" />
+      </button>
+      <div class="topbar-end">
+        <span id="hello"></span>
+        <button class="text-btn" type="button" id="logout">خروج</button>
+      </div>
+    </header>
+
+    <!-- ورود بازدیدکننده -->
+    <section id="view-login" class="login">
+      <div class="hero">
+        <img class="brand-logo" alt="" />
+        <p class="tagline" id="tagline"></p>
+      </div>
+
+      <form class="login-form" id="loginForm" novalidate>
+        <noscript><p class="error">برای استفاده از سایت، جاوااسکریپت مرورگر باید فعال باشد.</p></noscript>
+        <h1>خوش آمدید</h1>
+        <p class="lead">برای ورود، اطلاعات زیر را وارد کن</p>
+
+        <label class="field">
+          <span>نام</span>
+          <input name="firstName" type="text" autocomplete="given-name" placeholder="مثلاً علی" maxlength="40" />
+        </label>
+        <label class="field">
+          <span>نام خانوادگی</span>
+          <input name="lastName" type="text" autocomplete="family-name" placeholder="مثلاً احمدی" maxlength="40" />
+        </label>
+        <label class="field">
+          <span>شماره تماس</span>
+          <input name="phone" type="tel" dir="ltr" inputmode="numeric" autocomplete="tel" placeholder="09123456789" maxlength="16" />
+        </label>
+
+        <p class="error" id="loginError" role="alert"></p>
+        <button class="btn-primary" type="submit" id="loginBtn">ورود به سایت</button>
+      </form>
+    </section>
+
+    <!-- پایه‌ها -->
+    <section id="view-grades" hidden>
+      <div class="view-head">
+        <p id="greet"></p>
+        <h1>پایه‌ی خود را انتخاب کن</h1>
+      </div>
+      <div class="bands" id="gradeList"></div>
+    </section>
+
+    <!-- درس‌ها -->
+    <section id="view-subjects" hidden>
+      <button class="back" type="button" data-go="grades">بازگشت به پایه‌ها</button>
+      <div class="view-head">
+        <h1 id="subjectsTitle"></h1>
+        <p>درس مورد نظر را انتخاب کن</p>
+      </div>
+      <div class="covers" id="subjectList"></div>
+    </section>
+
+    <!-- آزمون‌های یک درس -->
+    <section id="view-exams" hidden>
+      <button class="back" type="button" data-go="subjects">بازگشت به درس‌ها</button>
+      <div class="view-head">
+        <h1 id="examsTitle"></h1>
+        <p id="examsSub"></p>
+      </div>
+      <ul class="rows" id="examList"></ul>
+    </section>
+
+    <!-- ورود مدیر -->
+    <section id="view-adminLogin" hidden>
+      <button class="back" type="button" data-go="home">بازگشت به سایت</button>
+      <form class="login-form" id="adminLoginForm" novalidate>
+        <h1>ورود مدیر</h1>
+        <p class="lead">ایمیل و رمزی که در Supabase برای خودت ساخته‌ای</p>
+        <label class="field">
+          <span>ایمیل</span>
+          <input name="email" type="email" dir="ltr" autocomplete="username" />
+        </label>
+        <label class="field">
+          <span>رمز عبور</span>
+          <input name="password" type="password" dir="ltr" autocomplete="current-password" />
+        </label>
+        <p class="error" id="adminLoginError" role="alert"></p>
+        <button class="btn-primary" type="submit">ورود</button>
+      </form>
+    </section>
+
+    <!-- پنل مدیریت -->
+    <section id="view-adminPanel" hidden>
+      <div class="admin-head">
+        <button class="back" type="button" data-go="home">بازگشت به سایت</button>
+        <button class="text-btn" type="button" id="adminLogout">خروج مدیر</button>
+      </div>
+
+      <div class="view-head">
+        <h1>مدیریت آزمون‌ها</h1>
+        <p id="dbStatus"></p>
+      </div>
+
+      <form class="admin-form" id="addExamForm" novalidate>
+        <h2>افزودن آزمون جدید</h2>
+        <label class="field">
+          <span>پایه</span>
+          <select name="grade" id="gradeSelect"></select>
+        </label>
+        <label class="field">
+          <span>درس</span>
+          <select name="subject" id="subjectSelect"></select>
+        </label>
+        <label class="field">
+          <span>عنوان آزمون</span>
+          <input name="title" type="text" maxlength="80" placeholder="مثلاً امتحان نوبت اول" />
+        </label>
+        <label class="field">
+          <span>فایل PDF (حداکثر ۲۰ مگابایت)</span>
+          <input name="file" type="file" accept="application/pdf" />
+        </label>
+        <p class="error" id="addError" role="alert"></p>
+        <button class="btn-primary" type="submit" id="addBtn">افزودن آزمون</button>
+      </form>
+
+      <h2 class="list-title">آزمون‌های ثبت‌شده</h2>
+      <p class="notice" id="adminMsg" role="status"></p>
+      <ul class="rows" id="adminList"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <span id="footer"></span>
+    <button class="foot-btn" type="button" data-go="admin">ورود مدیر</button>
+  </footer>
+
+  <script>
+    /* =========================================================
+       تنظیمات — همه‌ی بخش‌های قابل تغییر سایت اینجاست
+       ========================================================= */
+    const CONFIG = {
+      brand: {
+        name: "درسینو",
+        logo: "logo.png", // باید کنار همین فایل باشد
+        tagline: "آزمون‌های درسی پایه هفتم، هشتم و نهم",
+      },
+
+      // ذخیره‌ی اطلاعات ورود بازدیدکننده‌ها (اختیاری). خالی یعنی ذخیره نمی‌شود.
+      registerEndpoint: "",
+
+      // پایگاه داده و فایل‌ها (Supabase). دو مقدار زیر را از Project Settings > API کپی کن.
+      supabase: {
+        url: "https://rcmggknwgzebsvsrqiya.supabase.co", // مثال: https://abcdwxyz.supabase.co
+        anonKey: "sb_publishable_QxNfvHGM_REyIT1TtQZT0g_TMH1nXul", // کلید anon یا publishable. کلید service_role را هرگز اینجا نگذار
+        bucket: "exam-pdfs", // نام باکت فایل‌های PDF (همان نامی که در SQL ساختی)
+        table: "exams", // نام جدول آزمون‌ها
+      },
+
+      grades: [
+        { id: "7", title: "پایه هفتم", color: "#ef476f" },
+        { id: "8", title: "پایه هشتم", color: "#ffb703" },
+        { id: "9", title: "پایه نهم", color: "#06d6a0" },
+      ],
+
+      subjects: [
+        { id: "math", title: "ریاضی", icon: "📐", color: "#3a86ff" },
+        { id: "persian", title: "فارسی", icon: "📖", color: "#ff006e" },
+        { id: "science", title: "علوم", icon: "🔬", color: "#06a77d" },
+        { id: "english", title: "زبان انگلیسی", icon: "🔤", color: "#f3722c" },
+        { id: "arabic", title: "عربی", icon: "📜", color: "#8338ec" },
+      ],
+
+      // آزمون‌های پیش‌فرض. فقط وقتی Supabase وصل نباشد نمایش داده می‌شوند.
+      exams: {
+        "7": { math: [], persian: [], science: [], english: [], arabic: [] },
+        "8": { math: [], persian: [], science: [], english: [], arabic: [] },
+        "9": { math: [], persian: [], science: [], english: [], arabic: [] },
+      },
+    };
+
+    const SB = { ...CONFIG.supabase, url: CONFIG.supabase.url.replace(/\/+$/, "") };
+    const sbReady = !SB.url.includes("PASTE") && !SB.anonKey.includes("PASTE");
+    const MAX_PDF_BYTES = 20 * 1024 * 1024;
+
+    const state = {
+      user: null, // بازدیدکننده‌ای که وارد شده
+      gradeId: null,
+      subjectId: null,
+      exams: [], // همه‌ی آزمون‌ها (از Supabase یا پیش‌فرض)
+      dbError: "", // خطای اتصال به پایگاه داده
+      session: null, // نشست مدیر؛ فقط در حافظه‌ی همین صفحه
+      editingId: null, // آزمونی که عنوانش در حال ویرایش است
+      confirmId: null, // آزمونی که منتظر تأیید حذف است
+    };
+
+    /* ================= ابزارهای کمکی ================= */
+    const $ = (sel) => document.querySelector(sel);
+    const esc = (s) =>
+      String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+    const toFa = (s) => String(s).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
+    const toEn = (s) =>
+      String(s)
+        .replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+        .replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+
+    // شماره را به شکل 09xxxxxxxxx در می‌آورد (ارقام فارسی، +98 و فاصله را هم قبول می‌کند)
+    function normalizePhone(raw) {
+      let p = toEn(raw).replace(/[\s\-()]/g, "");
+      if (p.startsWith("+98")) p = "0" + p.slice(3);
+      else if (p.startsWith("0098")) p = "0" + p.slice(4);
+      else if (p.startsWith("98") && p.length === 12) p = "0" + p.slice(2);
+      return p;
+    }
+
+    const findGrade = (id) => CONFIG.grades.find((g) => g.id === id);
+    const findSubject = (id) => CONFIG.subjects.find((s) => s.id === id);
+    const getExams = (gradeId, subjectId) =>
+      state.exams.filter((x) => x.grade === gradeId && x.subject === subjectId);
+
+    /* ================= Supabase ================= */
+    const publicUrl = (path) => `${SB.url}/storage/v1/object/public/${SB.bucket}/${path}`;
+
+    function localExams() {
+      const rows = [];
+      Object.entries(CONFIG.exams).forEach(([grade, subjects]) => {
+        Object.entries(subjects).forEach(([subject, list]) => {
+          list.forEach((ex, i) =>
+            rows.push({
+              id: `local-${grade}-${subject}-${i}`,
+              grade,
+              subject,
+              title: ex.title || "",
+              url: ex.file || "",
+              local: true,
+            })
+          );
+        });
+      });
+      return rows;
+    }
+
+    // درخواست به Supabase. اگر auth=true باشد، توکن مدیر هم فرستاده می‌شود.
+    function sb(path, { method = "GET", body, file, prefer, auth = false } = {}) {
+      const headers = { apikey: SB.anonKey };
+      if (auth && state.session) headers.Authorization = `Bearer ${state.session.access_token}`;
+      if (prefer) headers.Prefer = prefer;
+
+      let payload;
+      if (file) {
+        headers["Content-Type"] = file.type || "application/pdf";
+        payload = file;
+      } else if (body !== undefined) {
+        headers["Content-Type"] = "application/json";
+        payload = JSON.stringify(body);
+      }
+      return fetch(`${SB.url}${path}`, { method, headers, body: payload });
+    }
+
+    async function adminSignIn(email, password) {
+      const res = await fetch(`${SB.url}/auth/v1/token?grant_type=password`, {
+        method: "POST",
+        headers: { apikey: SB.anonKey, "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.access_token) throw new Error("ایمیل یا رمز عبور اشتباه است.");
+      state.session = { access_token: data.access_token, refresh_token: data.refresh_token, email };
+    }
+
+    async function refreshSession() {
+      if (!state.session || !state.session.refresh_token) return false;
+      const res = await fetch(`${SB.url}/auth/v1/token?grant_type=refresh_token`, {
+        method: "POST",
+        headers: { apikey: SB.anonKey, "Content-Type": "application/json" },
+        body: JSON.stringify({ refresh_token: state.session.refresh_token }),
+      });
+      if (!res.ok) return false;
+      const data = await res.json();
+      state.session = { ...state.session, access_token: data.access_token, refresh_token: data.refresh_token };
+      return true;
+    }
+
+    // درخواست‌های مدیر. اگر توکن تمام شده باشد، یک بار تازه‌سازی و دوباره تلاش می‌شود.
+    async function adminRequest(path, opts = {}) {
+      let res = await sb(path, { ...opts, auth: true });
+      if (res.status === 401 && (await refreshSession())) {
+        res = await sb(path, { ...opts, auth: true });
+      }
+      if (res.status === 401) {
+        state.session = null;
+        throw new Error("نشست مدیر تمام شده است. دوباره وارد شو.");
+      }
+      return res;
+    }
+
+    // اگر درخواست ناموفق بود، پیام واقعی Supabase هم در خطا نشان داده می‌شود
+async function failure(what, res) {
+  const text = await res.text().catch(() => "");
+  let detail = text;
+  try { detail = JSON.parse(text).message || text; } catch (_) {}
+  return new Error(`${what} (کد ${res.status}): ${String(detail).slice(0, 300)}`);
+}
+
+async function loadExams() {
+      if (!sbReady) {
+        state.exams = localExams();
+        state.dbError = "";
+        return;
+      }
+      try {
+        const res = await sb(`/rest/v1/${SB.table}?select=*&order=created_at.asc`);
+        if (!res.ok) throw await failure("خواندن اطلاعات ناموفق بود", res);
+        const rows = await res.json();
+        state.exams = rows.map((r) => ({ ...r, url: publicUrl(r.file_path) }));
+        state.dbError = "";
+      } catch (err) {
+        state.exams = localExams();
+        state.dbError = `${err.message}. فهرست پیش‌فرض نمایش داده می‌شود.`;
+      }
+    }
+
+    async function removeFile(path) {
+      try {
+        await adminRequest(`/storage/v1/object/${SB.bucket}`, { method: "DELETE", body: { prefixes: [path] } });
+      } catch (_) {
+        // اگر فایل حذف نشد، رکورد آزمون حذف شده است؛ این خطا مهم نیست
+      }
+    }
+
+    async function addExam({ grade, subject, title, file }) {
+      const path = `${grade}/${subject}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.pdf`;
+
+      const up = await adminRequest(`/storage/v1/object/${SB.bucket}/${path}`, { method: "POST", file });
+      if (!up.ok) throw await failure("آپلود فایل ناموفق بود", up);
+
+      const ins = await adminRequest(`/rest/v1/${SB.table}`, {
+        method: "POST",
+        body: { grade, subject, title, file_path: path },
+        prefer: "return=minimal",
+      });
+      if (!ins.ok) {
+        await removeFile(path);
+        throw await failure("ثبت آزمون ناموفق بود", ins);
+      }
+    }
+
+    async function deleteExam(exam) {
+      const res = await adminRequest(`/rest/v1/${SB.table}?id=eq.${encodeURIComponent(exam.id)}`, {
+        method: "DELETE",
+        prefer: "return=minimal",
+      });
+      if (!res.ok) throw await failure("حذف ناموفق بود", res);
+      await removeFile(exam.file_path);
+    }
+
+    async function renameExam(id, title) {
+      const res = await adminRequest(`/rest/v1/${SB.table}?id=eq.${encodeURIComponent(id)}`, {
+        method: "PATCH",
+        body: { title },
+        prefer: "return=minimal",
+      });
+      if (!res.ok) throw await failure("ذخیره عنوان ناموفق بود", res);
+    }
+
+    /* ================= ذخیره‌ی اطلاعات ورود (اختیاری) ================= */
+    function saveRegistration(user) {
+      if (!CONFIG.registerEndpoint) return;
+      fetch(CONFIG.registerEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ ...user, date: new Date().toISOString() }),
+      }).catch(() => {});
+    }
+
+    /* ================= برند و لوگو ================= */
+    function applyBrand() {
+      const { name, logo, tagline } = CONFIG.brand;
+      document.title = `${name} | ${tagline}`;
+      $("#tagline").textContent = tagline;
+      $("#footer").textContent = name;
+      document.querySelectorAll(".brand-logo").forEach((img) => {
+        img.alt = name;
+        // اگر فایل لوگو پیدا نشد، نام سایت با رنگ‌های رنگین‌کمانی نشان داده می‌شود
+        img.addEventListener("error", () => {
+          const text = document.createElement("span");
+          text.className = "logo-fallback";
+          text.textContent = name;
+          img.replaceWith(text);
+        });
+        img.src = logo;
+      });
+    }
+    applyBrand();
+
+    /* ================= مسیریابی ================= */
+    const VIEWS = ["login", "grades", "subjects", "exams", "adminLogin", "adminPanel"];
+    const SITE_VIEWS = ["grades", "subjects", "exams"];
+
+    function show(view) {
+      VIEWS.forEach((v) => { $("#view-" + v).hidden = v !== view; });
+      $("#topbar").hidden = !SITE_VIEWS.includes(view);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function go(view) {
+      if (view === "home") return go(state.user ? "grades" : "login");
+      if (view === "admin") return openAdmin();
+      if (view === "grades") renderGrades();
+      if (view === "subjects") renderSubjects();
+      if (view === "exams") renderExams();
+      show(view);
+    }
+
+    /* ================= صفحه‌های بازدیدکننده ================= */
+    function renderGrades() {
+      $("#greet").textContent = `سلام ${state.user.firstName} عزیز`;
+      $("#gradeList").innerHTML = CONFIG.grades
+        .map((g, i) => {
+          const total = CONFIG.subjects.reduce((sum, s) => sum + getExams(g.id, s.id).length, 0);
+          return `
+            <button class="band" type="button" data-grade="${esc(g.id)}" style="--c:${esc(g.color)};--i:${i}">
+              <span class="band-num">${toFa(g.id)}</span>
+              <span class="band-text">
+                <span class="band-title">${esc(g.title)}</span>
+                <span class="band-meta">${total ? toFa(total) + " آزمون" : "آزمون‌ها به زودی"}</span>
+              </span>
+            </button>`;
+        })
+        .join("");
+    }
+
+    function renderSubjects() {
+      $("#subjectsTitle").textContent = findGrade(state.gradeId).title;
+      $("#subjectList").innerHTML = CONFIG.subjects
+        .map((s, i) => {
+          const count = getExams(state.gradeId, s.id).length;
+          return `
+            <button class="cover" type="button" data-subject="${esc(s.id)}"
+                    style="--c:${esc(s.color)};--soft:${esc(s.color)}2e;--i:${i}">
+              <span class="cover-icon">${esc(s.icon)}</span>
+              <span class="cover-text">
+                <span class="cover-title">${esc(s.title)}</span>
+                <span class="cover-meta">${count ? toFa(count) + " آزمون" : "آزمون‌ها به زودی"}</span>
+              </span>
+            </button>`;
+        })
+        .join("");
+    }
+
+    function renderExams() {
+      const grade = findGrade(state.gradeId);
+      const subject = findSubject(state.subjectId);
+      const exams = getExams(state.gradeId, state.subjectId);
+
+      $("#examsTitle").textContent = `آزمون‌های ${subject.title}`;
+      $("#examsSub").textContent = grade.title;
+
+      $("#examList").innerHTML = exams.length
+        ? exams
+            .map(
+              (exam, i) => `
+                <li class="row" style="--c:${esc(subject.color)};--i:${i}">
+                  <span class="row-num">${toFa(i + 1)}</span>
+                  <span class="row-title">${esc(exam.title || "آزمون " + toFa(i + 1))}</span>
+                  ${
+                    exam.url
+                      ? `<a class="open" href="${esc(exam.url)}" target="_blank" rel="noopener">مشاهده PDF</a>`
+                      : `<span class="soon">به زودی</span>`
+                  }
+                </li>`
+            )
+            .join("")
+        : `<li class="empty">آزمونی برای این درس هنوز اضافه نشده است</li>`;
+    }
+
+    /* ================= پنل مدیریت ================= */
+    async function openAdmin() {
+      if (!state.session) return show("adminLogin");
+      await reloadAdmin();
+      show("adminPanel");
+    }
+
+    async function reloadAdmin(msg = "") {
+      await loadExams();
+      renderAdmin();
+      showAdminMsg(state.dbError || msg, Boolean(state.dbError));
+    }
+
+    function renderAdmin() {
+      $("#gradeSelect").innerHTML = CONFIG.grades
+        .map((g) => `<option value="${esc(g.id)}">${esc(g.title)}</option>`)
+        .join("");
+      $("#subjectSelect").innerHTML = CONFIG.subjects
+        .map((s) => `<option value="${esc(s.id)}">${esc(s.title)}</option>`)
+        .join("");
+
+      $("#dbStatus").textContent = sbReady
+        ? state.dbError || "اتصال به پایگاه داده برقرار است."
+        : "Supabase هنوز وصل نشده است. آدرس و کلید را در بخش supabase فایل بگذار.";
+      $("#addBtn").disabled = !sbReady;
+
+      $("#adminList").innerHTML = state.exams.length
+        ? state.exams.map(adminRow).join("")
+        : `<li class="empty">هنوز آزمونی ثبت نشده است</li>`;
+    }
+
+    function adminRow(exam) {
+      const grade = findGrade(exam.grade);
+      const subject = findSubject(exam.subject);
+      const color = subject ? subject.color : "#8a8f99";
+      const meta = `${grade ? grade.title : exam.grade}، ${subject ? subject.title : exam.subject}`;
+
+      let main = `<span class="row-title">${esc(exam.title || "بدون عنوان")}</span>`;
+      let actions = `<span class="soon">فقط در پیش‌فرض‌ها</span>`;
+
+      if (!exam.local) {
+        if (state.editingId === exam.id) {
+          main = `<input class="inline-input" id="editTitle" maxlength="80" value="${esc(exam.title)}" />`;
+          actions = `
+            <button class="mini" type="button" data-action="save" data-id="${esc(exam.id)}">ذخیره</button>
+            <button class="mini" type="button" data-action="cancel">انصراف</button>`;
+        } else {
+          const confirming = state.confirmId === exam.id;
+          actions = `
+            <button class="mini" type="button" data-action="edit" data-id="${esc(exam.id)}">ویرایش</button>
+            <button class="mini danger" type="button" data-action="delete" data-id="${esc(exam.id)}">${
+              confirming ? "مطمئنی؟" : "حذف"
+            }</button>`;
+        }
+      }
+
+      return `
+        <li class="row admin-row" style="--c:${esc(color)}">
+          <div class="row-main">
+            ${main}
+            <span class="row-meta">${esc(meta)}</span>
+          </div>
+          <div class="row-actions">${actions}</div>
+        </li>`;
+    }
+
+    function showAdminMsg(text, isError = false) {
+      const el = $("#adminMsg");
+      el.textContent = text;
+      el.className = isError ? "error" : "notice";
+    }
+
+    async function adminAction(action, id) {
+      const exam = state.exams.find((x) => x.id === id);
+      if (!exam && action !== "cancel") return;
+      try {
+        if (action === "edit") {
+          state.editingId = id;
+          state.confirmId = null;
+          return renderAdmin();
+        }
+        if (action === "cancel") {
+          state.editingId = null;
+          return renderAdmin();
+        }
+        if (action === "save") {
+          const title = $("#editTitle").value.trim();
+          if (!title) throw new Error("عنوان نمی‌تواند خالی باشد.");
+          await renameExam(id, title);
+          state.editingId = null;
+          return reloadAdmin("عنوان ذخیره شد.");
+        }
+        if (action === "delete") {
+          // حذف دو مرحله‌ای: اول تأیید، بعد حذف
+          if (state.confirmId !== id) {
+            state.confirmId = id;
+            return renderAdmin();
+          }
+          await deleteExam(exam);
+          state.confirmId = null;
+          return reloadAdmin("آزمون حذف شد.");
+        }
+      } catch (err) {
+        showAdminMsg(err.message, true);
+      }
+    }
+
+    /* ================= رویدادها ================= */
+
+    // ورود بازدیدکننده
+    $("#loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const f = e.currentTarget.elements;
+      const firstName = f.firstName.value.trim();
+      const lastName = f.lastName.value.trim();
+      const phone = normalizePhone(f.phone.value);
+
+      let error = "";
+      if (firstName.length < 2) error = "لطفاً نام خود را وارد کن.";
+      else if (lastName.length < 2) error = "لطفاً نام خانوادگی خود را وارد کن.";
+      else if (!/^09\d{9}$/.test(phone)) error = "شماره تماس معتبر نیست. مثال: 09123456789";
+
+      $("#loginError").textContent = error;
+      if (error) return;
+
+      const btn = $("#loginBtn");
+      btn.disabled = true;
+      btn.textContent = "در حال ورود…";
+
+      state.user = { firstName, lastName, phone };
+      $("#hello").textContent = `${firstName} ${lastName}`;
+      saveRegistration(state.user);
+      await loadExams();
+
+      btn.disabled = false;
+      btn.textContent = "ورود به سایت";
+      go("grades");
+    });
+
+    $("#logout").addEventListener("click", () => {
+      Object.assign(state, { user: null, gradeId: null, subjectId: null });
+      $("#loginForm").reset();
+      $("#loginError").textContent = "";
+      go("login");
+    });
+
+    // ورود مدیر
+    $("#adminLoginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const f = e.currentTarget.elements;
+      $("#adminLoginError").textContent = "";
+      if (!sbReady) {
+        $("#adminLoginError").textContent = "ابتدا آدرس و کلید Supabase را در تنظیمات فایل بگذار.";
+        return;
+      }
+      try {
+        await adminSignIn(f.email.value.trim(), f.password.value);
+        f.password.value = "";
+        await openAdmin();
+      } catch (err) {
+        $("#adminLoginError").textContent = err.message;
+      }
+    });
+
+    $("#adminLogout").addEventListener("click", () => {
+      state.session = null;
+      state.editingId = null;
+      state.confirmId = null;
+      $("#adminLoginForm").reset();
+      go("home");
+    });
+
+    // افزودن آزمون جدید
+    $("#addExamForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const f = e.currentTarget.elements;
+      const grade = f.grade.value;
+      const subject = f.subject.value;
+      const title = f.title.value.trim();
+      const file = f.file.files[0];
+      const isPdf = Boolean(file) && (file.type === "application/pdf" || /\.pdf$/i.test(file.name));
+
+      let error = "";
+      if (!sbReady) error = "ابتدا Supabase را در تنظیمات فایل وصل کن.";
+      else if (!title) error = "عنوان آزمون را وارد کن.";
+      else if (!file) error = "فایل PDF را انتخاب کن.";
+      else if (!isPdf) error = "فقط فایل PDF قابل قبول است.";
+      else if (file.size > MAX_PDF_BYTES) error = "حجم فایل بیشتر از ۲۰ مگابایت است.";
+      $("#addError").textContent = error;
+      if (error) return;
+
+      const btn = $("#addBtn");
+      btn.disabled = true;
+      btn.textContent = "در حال آپلود…";
+      try {
+        await addExam({ grade, subject, title, file });
+        f.title.value = "";
+        f.file.value = "";
+        await reloadAdmin("آزمون با موفقیت ثبت شد.");
+      } catch (err) {
+        $("#addError").textContent = err.message;
+      } finally {
+        btn.disabled = !sbReady;
+        btn.textContent = "افزودن آزمون";
+      }
+    });
+
+    // کلیک‌ها: پایه، درس، عملیات مدیر، و ناوبری
+    document.addEventListener("click", (e) => {
+      const grade = e.target.closest("[data-grade]");
+      if (grade) {
+        state.gradeId = grade.dataset.grade;
+        return go("subjects");
+      }
+
+      const subject = e.target.closest("[data-subject]");
+      if (subject) {
+        state.subjectId = subject.dataset.subject;
+        return go("exams");
+      }
+
+      const action = e.target.closest("[data-action]");
+      if (action) return adminAction(action.dataset.action, action.dataset.id);
+
+      const nav = e.target.closest("[data-go]");
+      if (nav) go(nav.dataset.go);
+    });
+  </script>
+</body>
+</html>
